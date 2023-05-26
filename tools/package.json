@@ -2,6 +2,7 @@
 	"dependencies": {
 		"@faker-js/faker": "^8.0.1",
 		"bcrypt": "^5.1.0",
+		"dotenv": "^16.0.3",
 		"mongodb": "^5.5.0"
 	}
 }
