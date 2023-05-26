@@ -6,14 +6,14 @@ const users =
 	{
 		_id: new ObjectId('646fa2ef0d7361b34925370a'),
 		name: 'Alice',
-		username: 'alice',
+		handle: 'alice',
 		password: 'somepass',
 		role: 'superadmin'
 	},
 	{
 		_id: new ObjectId('646fa2f78b6443983ac9e6f2'),
 		name: 'U Myint',
-		username: 'myint',
+		handle: 'myint',
 		password: 'somepass',
 		role: 'owner',
 		multiply: [
@@ -34,7 +34,7 @@ const users =
 	{
 		_id: new ObjectId('646fa330bbcfdeb412db44bc'),
 		name: 'U Soe',
-		username: 'soe',
+		handle: 'soe',
 		password: 'somepass',
 		role: 'owner',
 		multiply: [
