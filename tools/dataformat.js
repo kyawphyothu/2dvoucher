@@ -7,27 +7,30 @@ const users =
 		_id: new ObjectId('646fa2ef0d7361b34925370a'),
 		name: 'Alice',
 		handle: 'alice',
-		password: 'somepass',
+		password: '',
 		role: 'superadmin'
 	},
 	{
 		_id: new ObjectId('646fa2f78b6443983ac9e6f2'),
 		name: 'U Myint',
 		handle: 'myint',
-		password: 'somepass',
+		password: '',
 		role: 'owner',
 		multiply: [
 			{
 				type: 'mm2d',
 				z: 80,
+				limit: 100000,
 			},
 			{
 				type: 'dubai2d',
 				z: 85,
+				limit: 50000,
 			},
 			{
 				type: '3d',
 				z: 500,
+				limit: 0,
 			}
 		]
 	},
@@ -35,20 +38,23 @@ const users =
 		_id: new ObjectId('646fa330bbcfdeb412db44bc'),
 		name: 'U Soe',
 		handle: 'soe',
-		password: 'somepass',
+		password: '',
 		role: 'owner',
 		multiply: [
 			{
 				type: 'mm2d',
 				z: 80,
+				limit: 0,
 			},
 			{
 				type: 'dubai2d',
 				z: 85,
+				limit: 400000,
 			},
 			{
 				type: '3d',
 				z: 500,
+				limit: 0,
 			}
 		]
 	},

@@ -21,6 +21,9 @@ async function seedUsers() {
 	await db.collection("users").deleteMany({});
 
 	let hash = await bcrypt.hash("password", 10);
+	users.forEach(user => {
+		user.password = hash
+	});
 	let data = users;
 
 	try {
