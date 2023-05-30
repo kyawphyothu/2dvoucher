@@ -1,7 +1,6 @@
 const { users, bettors, win_numbers, bet_types, user_types } = require('./dataformat')
 
-const { faker } = require("@faker-js/faker");
-const bcrypt = require("bcrypt");
+
 
 require('dotenv').config();
 
@@ -20,10 +19,6 @@ const number_of_notis = 10;
 async function seedUsers() {
 	await db.collection("users").deleteMany({});
 
-	let hash = await bcrypt.hash("password", 10);
-	users.forEach(user => {
-		user.password = hash
-	});
 	let data = users;
 
 	try {
