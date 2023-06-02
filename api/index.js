@@ -55,7 +55,7 @@ app.post("/login", async (req, res) => {
 	const match = await bcrypt.compare(password, user.password);
 
 	if (match) {
-		user = await db.collection("users").findOne({ handle }, { password: 0 });
+		delete user.password;
 		const token = jwt.sign(user, secret);
 		return res.status(201).json({ token, user });
 	}
