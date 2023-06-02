@@ -62,6 +62,12 @@ function reducer(state, action) {
 		case "DARKMODE": {
 			return { ...state, darkMode: action.value };
 		}
+		case "AUTH": {
+			return { ...state, auth: action.value };
+		}
+		case "AUTHUSER": {
+			return { ...state, authUser: action.value };
+		}
 		default: {
 			throw new Error(`Unhandled action type: ${action.type}`);
 		}
@@ -81,6 +87,8 @@ function MaterialUIControllerProvider({ children }) {
 		direction: "ltr",
 		layout: "dashboard",
 		darkMode: true,
+		auth: false,
+		authUser: {},
 	};
 
 	const [controller, dispatch] = useReducer(reducer, initialState);
@@ -119,6 +127,8 @@ const setOpenConfigurator = (dispatch, value) => dispatch({ type: "OPEN_CONFIGUR
 const setDirection = (dispatch, value) => dispatch({ type: "DIRECTION", value });
 const setLayout = (dispatch, value) => dispatch({ type: "LAYOUT", value });
 const setDarkMode = (dispatch, value) => dispatch({ type: "DARKMODE", value });
+const setAuth = (dispatch, value) => dispatch({ type: "AUTH", value });
+const setAuthUser = (dispatch, value) => dispatch({ type: "AUTHUSER", value });
 
 export {
 	MaterialUIControllerProvider,
@@ -133,4 +143,6 @@ export {
 	setDirection,
 	setLayout,
 	setDarkMode,
+	setAuth,
+	setAuthUser,
 };

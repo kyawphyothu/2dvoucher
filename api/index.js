@@ -13,9 +13,11 @@ app.use(bodyParser.json());
 const cors = require("cors");
 app.use(cors());
 
+require("dotenv").config();
+
 const { MongoClient, ObjectId } = require("mongodb");
-const mongo = new MongoClient("mongodb://localhost");
-const db = mongo.db("twitter");
+const mongo = new MongoClient(process.env.MONGO_DB_DEV);
+const db = mongo.db("two_d_voucher");
 
 const { relationships } = require("./pipelines");
 
@@ -26,8 +28,7 @@ const auth = (req, res, next) => {
 	const authHeader = req.headers["authorization"];
 	const token = authHeader && authHeader.split(" ")[1];
 
-	if (!token)
-		return res.status(401).json({ msg: "invalid: no token provided" });
+	if (!token) return res.status(401).json({ msg: "invalid: no token provided" });
 
 	jwt.verify(token, secret, function (err, user) {
 		if (err) return res.status(403).json({ msg: "invalid token" });
@@ -54,6 +55,7 @@ app.post("/login", async (req, res) => {
 	const match = await bcrypt.compare(password, user.password);
 
 	if (match) {
+		user = await db.collection("users").findOne({ handle }, { password: 0 });
 		const token = jwt.sign(user, secret);
 		return res.status(201).json({ token, user });
 	}
@@ -65,9 +67,7 @@ app.post("/login", async (req, res) => {
 app.get("/user", auth, async (req, res) => {
 	const user = res.locals.user;
 
-	let result = await db
-		.collection("users")
-		.findOne({ _id: ObjectId(user._id) });
+	let result = await db.collection("users").findOne({ _id: new ObjectId(user._id) });
 	if (result) {
 		return res.status(200).json(result);
 	}
@@ -185,9 +185,7 @@ app.post("/user", async (req, res) => {
 			created: new Date(),
 		});
 
-		let user = await db
-			.collection("users")
-			.findOne({ _id: ObjectId(result.insertedId) });
+		let user = await db.collection("users").findOne({ _id: ObjectId(result.insertedId) });
 		let token = jwt.sign(user, secret);
 
 		return res.status(201).json({ token, user });
@@ -216,7 +214,7 @@ app.put("/users/:id", async (req, res) => {
 			{ _id: ObjectId(id) },
 			{
 				$set: data,
-			},
+			}
 		);
 
 		let user = await db.collection("users").findOne({ _id: ObjectId(id) });
@@ -244,13 +242,9 @@ app.put("/users/:id/follow", auth, async (req, res) => {
 
 	actorUser.following = actorUser.following || [];
 
-	if (targetUser.followers.find(item => item.toString() === actorId)) {
-		targetUser.followers = targetUser.followers.filter(
-			uid => uid.toString() !== actorId,
-		);
-		actorUser.following = actorUser.following.filter(
-			uid => uid.toString() !== targetId,
-		);
+	if (targetUser.followers.find((item) => item.toString() === actorId)) {
+		targetUser.followers = targetUser.followers.filter((uid) => uid.toString() !== actorId);
+		actorUser.following = actorUser.following.filter((uid) => uid.toString() !== targetId);
 	} else {
 		targetUser.followers.push(ObjectId(actorId));
 		actorUser.following.push(ObjectId(targetId));
@@ -261,14 +255,14 @@ app.put("/users/:id/follow", auth, async (req, res) => {
 			{ _id: ObjectId(targetId) },
 			{
 				$set: { followers: targetUser.followers },
-			},
+			}
 		);
 
 		await db.collection("users").updateOne(
 			{ _id: ObjectId(actorId) },
 			{
 				$set: { following: actorUser.following },
-			},
+			}
 		);
 
 		return res.status(200).json({
@@ -619,8 +613,8 @@ app.put("/tweets/:id/like", auth, async (req, res) => {
 
 	tweet.likes = tweet.likes || [];
 
-	if (tweet.likes.find(item => item.toString() === user)) {
-		tweet.likes = tweet.likes.filter(uid => uid.toString() !== user);
+	if (tweet.likes.find((item) => item.toString() === user)) {
+		tweet.likes = tweet.likes.filter((uid) => uid.toString() !== user);
 	} else {
 		tweet.likes.push(ObjectId(user));
 	}
@@ -630,7 +624,7 @@ app.put("/tweets/:id/like", auth, async (req, res) => {
 			{ _id: ObjectId(id) },
 			{
 				$set: tweet,
-			},
+			}
 		);
 
 		return res.status(200).json(tweet.likes);
@@ -702,8 +696,7 @@ app.post("/notis", auth, async (req, res) => {
 	});
 
 	// No noti for unlike
-	if (!tweet.likes.find(item => item.toString() === user._id))
-		return res.status(304).end();
+	if (!tweet.likes.find((item) => item.toString() === user._id)) return res.status(304).end();
 
 	// No noti for own posts
 	if (user._id === tweet.owner.toString()) return res.status(304).end();
@@ -725,7 +718,7 @@ app.post("/notis", auth, async (req, res) => {
 		_id: result.insertedId,
 	});
 
-	const webSocketClient = subscribers.filter(subscriber => {
+	const webSocketClient = subscribers.filter((subscriber) => {
 		return subscriber.uid === tweet.owner.toString();
 	})[0];
 
@@ -745,7 +738,7 @@ app.put("/notis", auth, (req, res) => {
 		{ owner: ObjectId(user._id) },
 		{
 			$set: { read: true },
-		},
+		}
 	);
 
 	return res.status(200).json({ msg: "all notis marked read" });
@@ -759,7 +752,7 @@ app.put("/notis/:id", auth, async (req, res) => {
 		{ _id: ObjectId(id) },
 		{
 			$set: { read: true },
-		},
+		}
 	);
 
 	return res.status(200).json({ msg: "noti marked read" });
@@ -768,18 +761,13 @@ app.put("/notis/:id", auth, async (req, res) => {
 const subscribers = [];
 
 app.ws("/subscribe", (conn, req) => {
-	conn.on("message", token => {
+	conn.on("message", (token) => {
 		if (token) {
 			jwt.verify(token, secret, function (err, user) {
 				if (err) console.log("invalid token");
 
 				if (user) {
-					if (
-						!subscribers.find(
-							subscriber =>
-								subscriber.uid === user._id.toString(),
-						)
-					) {
+					if (!subscribers.find((subscriber) => subscriber.uid === user._id.toString())) {
 						subscribers.push({ uid: user._id, conn });
 
 						console.log("adding subscription: " + user._id);

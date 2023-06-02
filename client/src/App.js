@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
 
 // react-router components
@@ -40,7 +25,13 @@ import themeDark from "assets/theme-dark";
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import {
+	useMaterialUIController,
+	setMiniSidenav,
+	setOpenConfigurator,
+	setAuth,
+	setAuthUser,
+} from "context";
 
 import SignIn from "layouts/authentication/sign-in";
 
@@ -48,11 +39,9 @@ import SignIn from "layouts/authentication/sign-in";
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import Dashboard from "layouts/dashboard";
+import { fetchUser } from "apiCalls";
 
 export default function App() {
-	const [auth, setAuth] = useState(true);
-	const [authUser, setAuthUser] = useState({});
-
 	const [controller, dispatch] = useMaterialUIController();
 	const {
 		miniSidenav,
@@ -63,9 +52,22 @@ export default function App() {
 		transparentSidenav,
 		whiteSidenav,
 		darkMode,
+		auth,
+		authUser,
 	} = controller;
 	const [onMouseEnter, setOnMouseEnter] = useState(false);
 	const { pathname } = useLocation();
+
+	useEffect(() => {
+		(async () => {
+			const user = await fetchUser();
+			if (!user) return false;
+
+			setAuthUser(dispatch, user);
+			setAuth(dispatch, true);
+			return true;
+		})();
+	}, []);
 
 	// Open sidenav when mouse enter on mini sidenav
 	const handleOnMouseEnter = () => {
