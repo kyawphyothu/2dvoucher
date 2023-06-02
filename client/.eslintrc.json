@@ -13,6 +13,7 @@
 	},
 	"plugins": ["react", "prettier"],
 	"rules": {
+		"no-else-return": "off",
 		"no-unused-vars": "off",
 		"no-unused-expressions": "off",
 		"prettier/prettier": [
