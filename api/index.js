@@ -21,7 +21,7 @@ const db = mongo.db("two_d_voucher");
 
 const { relationships } = require("./pipelines");
 
-const secret = "shhhhhh!!";
+const secret = process.env.SECRET_KEY;
 
 // auth middleware
 const auth = (req, res, next) => {
