@@ -19,12 +19,17 @@ import { login } from "apiCalls";
 import { useMaterialUIController, setAuth, setAuthUser } from "context";
 import Snackbar from "@mui/material/Snackbar/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress/CircularProgress";
+import { Save as SaveIcon } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { Box } from "@mui/material";
 
 const Alert = forwardRef(function Alert(props, ref) {
 	return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function Basic() {
+	const [isLoadingBtn, setIsLoadingBtn] = useState(false);
 	const [controller, dispatch] = useMaterialUIController();
 
 	const [rememberMe, setRememberMe] = useState(false);
@@ -36,10 +41,12 @@ function Basic() {
 	const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
 	const handleSignIn = () => {
+		setIsLoadingBtn(true);
 		const username = usernamRef.current.value;
 		const password = passwordRef.current.value;
 		(async () => {
 			const user = await login(username, password);
+			setIsLoadingBtn(false);
 			if (!user) return setHasError(true);
 
 			setAuth(dispatch, true);
@@ -69,38 +76,6 @@ function Basic() {
 					<MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
 						Sign in
 					</MDTypography>
-					{/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-						<Grid item xs={2}>
-							<MDTypography
-								component={MuiLink}
-								href="#"
-								variant="body1"
-								color="white"
-							>
-								<FacebookIcon color="inherit" />
-							</MDTypography>
-						</Grid>
-						<Grid item xs={2}>
-							<MDTypography
-								component={MuiLink}
-								href="#"
-								variant="body1"
-								color="white"
-							>
-								<GitHubIcon color="inherit" />
-							</MDTypography>
-						</Grid>
-						<Grid item xs={2}>
-							<MDTypography
-								component={MuiLink}
-								href="#"
-								variant="body1"
-								color="white"
-							>
-								<GoogleIcon color="inherit" />
-							</MDTypography>
-						</Grid>
-					</Grid> */}
 				</MDBox>
 				<MDBox pt={4} pb={3} px={3}>
 					<MDBox component="form" role="form">
@@ -138,25 +113,18 @@ function Basic() {
 								color="info"
 								fullWidth
 								onClick={handleSignIn}
+								disabled={isLoadingBtn}
 							>
 								sign in
+								{isLoadingBtn ? (
+									<Box sx={{ display: "flex", marginLeft: "12px" }}>
+										<CircularProgress size={16} />
+									</Box>
+								) : (
+									""
+								)}
 							</MDButton>
 						</MDBox>
-						{/* <MDBox mt={3} mb={1} textAlign="center">
-							<MDTypography variant="button" color="text">
-								Don&apos;t have an account?{" "}
-								<MDTypography
-									component={Link}
-									to="/authentication/sign-up"
-									variant="button"
-									color="info"
-									fontWeight="medium"
-									textGradient
-								>
-									Sign up
-								</MDTypography>
-							</MDTypography>
-						</MDBox> */}
 					</MDBox>
 				</MDBox>
 			</Card>
