@@ -14,16 +14,16 @@ Coded by www.creative-tim.com
 */
 
 const listItem = {
-  defaultProps: {
-    disableGutters: true,
-  },
+	defaultProps: {
+		disableGutters: true,
+	},
 
-  styleOverrides: {
-    root: {
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-  },
+	styleOverrides: {
+		root: {
+			paddingTop: 0,
+			paddingBottom: 0,
+		},
+	},
 };
 
 export default listItem;

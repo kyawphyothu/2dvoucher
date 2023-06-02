@@ -14,15 +14,15 @@ Coded by www.creative-tim.com
 */
 
 const appBar = {
-  defaultProps: {
-    color: "transparent",
-  },
+	defaultProps: {
+		color: "transparent",
+	},
 
-  styleOverrides: {
-    root: {
-      boxShadow: "none",
-    },
-  },
+	styleOverrides: {
+		root: {
+			boxShadow: "none",
+		},
+	},
 };
 
 export default appBar;
