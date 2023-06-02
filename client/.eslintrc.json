@@ -29,7 +29,7 @@
 			}
 		],
 		"react/jsx-curly-spacing": [2, "never"],
-		"indent": ["error", 4, { "SwitchCase": 1, "VariableDeclarator": 1 }]
+		"indent": ["error", "tab", { "SwitchCase": 1, "VariableDeclarator": 1 }]
 	},
 	"settings": { "import/resolver": { "node": { "paths": ["src"] } } }
 }
