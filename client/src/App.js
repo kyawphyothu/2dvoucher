@@ -40,8 +40,12 @@ import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import Dashboard from "layouts/dashboard";
 import { fetchUser } from "apiCalls";
+import { Box } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress/LinearProgress";
 
 export default function App() {
+	const [isFetchingUser, setIsFetchingUser] = useState(false);
+
 	const [controller, dispatch] = useMaterialUIController();
 	const {
 		miniSidenav,
@@ -60,7 +64,9 @@ export default function App() {
 
 	useEffect(() => {
 		(async () => {
+			setIsFetchingUser(true);
 			const user = await fetchUser();
+			setIsFetchingUser(false);
 			if (!user) return false;
 
 			setAuthUser(dispatch, user);
@@ -149,7 +155,11 @@ export default function App() {
 		</MDBox>
 	);
 
-	return (
+	return isFetchingUser ? (
+		<Box>
+			<LinearProgress />
+		</Box>
+	) : (
 		<ThemeProvider theme={darkMode ? themeDark : theme}>
 			<CssBaseline />
 			{layout === "dashboard" && (
