@@ -6,6 +6,8 @@ export function getToken() {
 }
 
 export async function login(handle, password) {
+	if (!handle || !password) return false;
+
 	const res = await fetch(`${apiBase}/login`, {
 		method: "POST",
 		headers: {
