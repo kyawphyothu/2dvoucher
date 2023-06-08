@@ -1,22 +1,8 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import {
+	Autocomplete,
 	CardContent,
 	Checkbox,
 	FormControl,
@@ -27,7 +13,7 @@ import {
 	RadioGroup,
 	TextField,
 } from "@mui/material";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -49,15 +35,34 @@ import authorsTableData from "layouts/tables/data/authorsTableData";
 import projectsTableData from "layouts/tables/data/projectsTableData";
 
 function Add() {
+	const [acceptors, setAcceptors] = useState([
+		{ label: "မိိမိ အကောင့်", handle: "self" },
+		{ label: "Chris", handle: "chris" },
+		{ label: "အခြား", handle: "other" },
+	]);
+	const [betTypes, setBetTypes] = useState([
+		{ label: "MM 2D", value: "mm2d" },
+		{ label: "3D", value: "3d" },
+		{ label: "Dubai 2D", value: "du2d" },
+	]);
+	const [acceptor, setAcceptor] = useState(acceptors[0]);
+	const [betType, setBetType] = useState(betTypes[0]);
+	const bets = useRef();
+
 	const { columns, rows } = authorsTableData();
 	const { columns: pColumns, rows: pRows } = projectsTableData();
 
-	const bets = useRef();
+	const handleChangeAcceptor = (event, value) => {
+		setAcceptor(value);
+	};
+	const handleChangeBetType = (event, value) => {
+		setBetType(value);
+	};
 
 	return (
 		<DashboardLayout>
 			<DashboardNavbar />
-			<MDBox pt={6} pb={3}>
+			<MDBox pt={6} pb={3} sx={{ width: { md: "50%" } }}>
 				<Grid container spacing={6}>
 					<Grid item xs={12}>
 						<Card>
@@ -66,7 +71,7 @@ function Add() {
 								<form
 									onSubmit={(e) => {
 										e.preventDefault();
-										console.log("hello");
+										console.log(acceptor.handle);
 									}}
 								>
 									<FormControl sx={{ width: "100%" }}>
@@ -76,92 +81,88 @@ function Add() {
 												container
 												spacing={3}
 												sx={{ marginTop: "5px" }}
-												rowSpacing={1}
+												rowSpacing={2}
 												columnSpacing={1}
 											>
 												<Grid
 													item
 													sx={{ display: "flex", alignItems: "center" }}
+													md={12}
 													xs={12}
-													md={4}
 												>
-													<FormControlLabel
-														control={<Checkbox />}
-														label="အရင်က ထိုးထားဖူးသူ?"
+													<Autocomplete
+														disablePortal
+														id="acceptors"
+														options={acceptors}
+														sx={{ width: "100%" }}
+														value={acceptor}
+														defaultValue={acceptor}
+														onChange={handleChangeAcceptor}
+														renderInput={(params) => (
+															<TextField
+																{...params}
+																label="လက်ခံသူ"
+															/>
+														)}
 													/>
 												</Grid>
-												<Grid item xs={12} md={8}>
+												{acceptor.handle === "other" && (
+													<Grid
+														item
+														sx={{
+															display: "flex",
+															alignItems: "center",
+														}}
+														md={12}
+														xs={12}
+													>
+														<TextField
+															id="bettorName"
+															label="လက်ခံသူအမည်"
+															variant="outlined"
+															fullWidth
+														/>
+													</Grid>
+												)}
+												<Grid
+													item
+													sx={{ display: "flex", alignItems: "center" }}
+													md={12}
+													xs={12}
+												>
+													<Autocomplete
+														disablePortal
+														id="types"
+														options={betTypes}
+														sx={{ width: "100%" }}
+														value={betType}
+														defaultValue={betType}
+														onChange={handleChangeBetType}
+														renderInput={(params) => (
+															<TextField
+																{...params}
+																label="အမျိုးအစား"
+															/>
+														)}
+													/>
+												</Grid>
+												<Grid
+													item
+													sx={{ display: "flex", alignItems: "center" }}
+													md={12}
+													xs={12}
+												>
 													<TextField
+														id="bettorName"
+														label="ထိုးသားအမည်(အမြဲမလိုအပ်ပါ)"
+														variant="outlined"
+														helperText="optional"
 														fullWidth
-														label="Name"
-														id="name"
-														sx={{ marginY: "20px" }}
 													/>
 												</Grid>
 											</Grid>
-											<Card sx={{ marginBottom: "20px" }}>
-												<CardContent>
-													<RadioGroup
-														row
-														aria-labelledby="demo-row-radio-buttons-group-label"
-														name="row-radio-buttons-group"
-														sx={{
-															display: "flex",
-															justifyContent: "space-evenly",
-														}}
-														defaultValue="mm2d"
-													>
-														<FormControlLabel
-															value="mm2d"
-															control={<Radio />}
-															label="MM 2D"
-															sx={{
-																backgroundColor: "#ffdf0096",
-																borderRadius: "20px",
-																paddingRight: "10px",
-															}}
-														/>
-														<FormControlLabel
-															value="du2d"
-															control={<Radio />}
-															label="Dubai 2D"
-															sx={{
-																// backgroundColor: "#ffdf0096",
-																border: "1px solid #ffdf0096",
-																borderRadius: "20px",
-																paddingRight: "10px",
-															}}
-														/>
-														<FormControlLabel
-															value="ga2d"
-															control={<Radio />}
-															label="GA 2D"
-															sx={{
-																// backgroundColor: "#ffdf0096",
-																border: "1px solid #ffdf0096",
-																borderRadius: "20px",
-																paddingRight: "10px",
-															}}
-														/>
-														<FormControlLabel
-															value="mg2d"
-															control={<Radio />}
-															label="Mega 2D"
-														/>
-														<FormControlLabel
-															value="3d"
-															control={<Radio />}
-															label="3D"
-														/>
-													</RadioGroup>
-												</CardContent>
-											</Card>
-											<LocalizationProvider dateAdapter={AdapterDayjs}>
-												<MobileDateTimePicker
-													defaultValue={dayjs("2022-04-17T15:30")}
-												/>
-											</LocalizationProvider>
 											<TextField
+												required
 												id="outlined-multiline-static"
 												label="2D 3D"
 												multiline
@@ -178,7 +179,7 @@ function Add() {
 														fullWidth
 														type="submit"
 													>
-														Save
+														Calculate
 													</MDButton>
 												</Grid>
 											</Grid>
