@@ -5,6 +5,7 @@ import {
 	Autocomplete,
 	CardContent,
 	Checkbox,
+	Fade,
 	FormControl,
 	FormControlLabel,
 	FormGroup,
@@ -116,12 +117,18 @@ function Add() {
 														md={12}
 														xs={12}
 													>
-														<TextField
-															id="bettorName"
-															label="လက်ခံသူအမည်"
-															variant="outlined"
-															fullWidth
-														/>
+														<Fade
+															in={acceptor.handle === "other"}
+															timeout={500}
+														>
+															<TextField
+																id="bettorName"
+																label="လက်ခံသူအမည်"
+																variant="outlined"
+																color="warning"
+																fullWidth
+															/>
+														</Fade>
 													</Grid>
 												)}
 												<Grid
@@ -169,10 +176,9 @@ function Add() {
 												rows={4}
 												inputRef={bets}
 												sx={{ marginY: "20px" }}
-												// defaultValue={default2D3D}
 											/>
 											<Grid container>
-												<Grid item xs={12} md={1}>
+												<Grid item xs={12} md={3}>
 													<MDButton
 														variant="contained"
 														color="info"
