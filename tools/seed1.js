@@ -28,27 +28,27 @@ async function seedUsers() {
 	}
 }
 
-async function seedBettors(){
-	await db.collection('bettors').deleteMany({});
+// async function seedBettors(){
+// 	await db.collection('bettors').deleteMany({});
 
-	let data = bettors;
+// 	let data = bettors;
 
-	try{
-		return await db.collection('bettors').insertMany(data);
-	} finally {
-		console.log('Bettors seeding done.');
-	}
-}
+// 	try{
+// 		return await db.collection('bettors').insertMany(data);
+// 	} finally {
+// 		console.log('Bettors seeding done.');
+// 	}
+// }
 
-async function seedWinNumbers(){
-	await db.collection('win_numbers').deleteMany({});
+// async function seedWinNumbers(){
+// 	await db.collection('win_numbers').deleteMany({});
 
-	try{
-		return await db.collection('win_numbers').insertMany(win_numbers);
-	} finally {
-		console.log('win number seeding done.')
-	}
-}
+// 	try{
+// 		return await db.collection('win_numbers').insertMany(win_numbers);
+// 	} finally {
+// 		console.log('win number seeding done.')
+// 	}
+// }
 
 async function seedBetTypes(){
 	await db.collection('bet_types').deleteMany({});
@@ -262,11 +262,11 @@ async function seed() {
 	console.log("Started seeding users...");
 	let users = await seedUsers();
 
-	console.log("Started seeding bettors...");
-	await seedBettors();
+	// console.log("Started seeding bettors...");
+	// await seedBettors();
 
-	console.log("Started seeding win numbers...");
-	await seedWinNumbers();
+	// console.log("Started seeding win numbers...");
+	// await seedWinNumbers();
 
 	console.log("Started seeding bet types...");
 	await seedBetTypes();

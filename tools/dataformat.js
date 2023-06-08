@@ -3,9 +3,6 @@
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
-// let hash;
-// hash = await bcrypt.hash("password", 10);
-
 const hash = bcrypt.hashSync('password', 10);
 
 //users
@@ -19,182 +16,164 @@ const users = [
 	},
 	{
 		_id: new ObjectId('646fa2f78b6443983ac9e6f2'),
-		name: 'U Myint',
-		handle: 'myint',
-		password: hash,
-		role: 'agent',
-		multiply: [
-			{
-				type: 'mm2d',
-				z: 80,
-				limit: 100000,
-			},
-			{
-				type: 'dubai2d',
-				z: 85,
-				limit: 50000,
-			},
-			{
-				type: '3d',
-				z: 500,
-				limit: 0,
-			},
-		],
-	},
-	{
-		_id: new ObjectId('646fa330bbcfdeb412db44bc'),
-		name: 'U Soe',
-		handle: 'soe',
-		password: hash,
-		role: 'agent',
-		multiply: [
-			{
-				type: 'mm2d',
-				z: 80,
-				limit: 0,
-			},
-			{
-				type: 'dubai2d',
-				z: 85,
-				limit: 400000,
-			},
-			{
-				type: '3d',
-				z: 500,
-				limit: 0,
-			},
-		],
-	},
-];
-
-//bettors
-const bettors = [
-	{
 		name: 'Bob',
-		handle: 'b_randomText', //b_ mean bettors
-		password: hash,
 		phone: '0912345678',
-		agentId: new ObjectId('646fa2f78b6443983ac9e6f2'),
-		role: 'subagent',
-		bets: [
+		handle: 'bob',
+		password: hash,
+		friends: ['chris', 'dave', 'eve'],
+		fRequest: ['frank', 'gina', 'hugo'],
+		fCancled: ['joe', 'kate'],
+		defaultType: '2d',
+		defaultAcceptor: [
 			{
-				type: 'mm2d',
-				name: 'မောင်ညွန့်',
-				date: new Date('2023-01-01'),
-				morning: true,
-				voucher: '43 200 /n 23.24.60 100 /n 45 100R200 /n 56R700 /n 9p100 /n 2468k200 /n os100 /n es200 /n 4t100 /n 5n200',
-				twoD: {
-					numbers: ['43', '23', '24', '60', '45', '54', '56R', '9P', '2468k', 'os', 'es', '4t', '5n'],
-					prices: [200, 100, 100, 100, 100, 200, 700, 100, 200, 100, 200, 100, 200],
-				},
-				// note: '',
-				invest: 2400,
-				win: ['43', 200], //only one
-				revenue: 18000,
+				type: '2d',
+				handle: 'chris',
 			},
 			{
-				type: 'mm2d',
-				name: 'အောင်ထွေး',
-				date: new Date('2023-01-01'),
-				morning: false,
-				voucher: '43 200 /n 23.24.60 100 /n 45 100R200 /n 56R700 /n 9p100 /n 2468k200 /n os100 /n es200 /n 4t100 /n 5n200',
-				twoD: {
-					numbers: ['43', '23', '24', '60', '45', '54', '56R', '9P', '2468k', 'os', 'es', '4t', '5n'],
-					prices: [200, 100, 100, 100, 100, 200, 700, 100, 200, 100, 200, 100, 200],
-				},
-				// note: '',
-				invest: 2400,
-				win: false, //only one
-				// revenue: 0,
+				type: 'du2d',
+				name: 'U Myint',
+			},
+		],
+		limit: {
+			'2d': 200000,
+			du2d: 4000000,
+		},
+		betFrom: [
+			{
+				type: '2d',
+				dateTime: '12pm',
+				bettorHandle: 'dave',
+				voucher: [
+					['12', 20000],
+					['53', 10000],
+				],
 			},
 			{
-				type: '3d',
-				name: 'စောမင်း',
-				date: new Date('2023-01-01'),
-				voucher: '012.200 /n 567r100',
-				threeD: {
-					numbers: ['012', '567r'],
-					prices: [200, 100],
-				},
-				// note: '',
-				invest: 800,
-				win: ['012', 200], //only one
-				revenue: 100000,
+				type: 'du2d',
+				dateTime: '5pm',
+				bettorName: 'Aung Lin',
+				voucher: [
+					['09', 500],
+					['43', 200],
+				],
+			},
+		],
+		betTo: [
+			{
+				type: '2d',
+				dateTime: '12pm',
+				bettorName: 'saw',
+				acceptorHandle: 'chris',
+				voucher: [
+					['12', 1000],
+					['53', 1000],
+				],
+			},
+			{
+				type: 'du2d',
+				dateTime: '5pm',
+				acceptorName: 'Tim',
+				voucher: [['09', 100]],
 			},
 		],
 	},
 	{
-		name: 'Mary',
-		phone: '0912345677',
-		agentId: new ObjectId('646fa2f78b6443983ac9e6f2'),
-		bets: [
+		name: 'Chris',
+		phone: '0912345678',
+		handle: 'chris',
+		password: hash,
+		friends: ['alice'],
+		fRequest: ['frank', 'gina', 'hugo'],
+		fCancled: ['joe', 'kate'],
+		defaultType: '2d',
+		defaultAcceptor: [
 			{
-				type: 'mm2d',
-				date: new Date('2023-01-01'),
-				morning: true,
-				voucher: '48 200 /n 23.24.60 100 /n 45 100R200 /n 56R700 /n 9p100 /n 2468k200 /n os100 /n es200 /n 4t100 /n 5n200',
-				twoD: {
-					numbers: ['43', '23', '24', '60', '45', '54', '56R', '9P', '2468k', 'os', 'es', '4t', '5n'],
-					prices: [200, 100, 100, 100, 100, 200, 700, 100, 200, 100, 200, 100, 200],
-				},
-				// note: '',
-				invest: 2400,
-				win: false, //only one
-				// revenue: 0,
+				type: '2d',
+				handle: '',
 			},
 			{
-				type: 'mm2d',
-				date: new Date('2023-01-01'),
-				morning: false,
-				voucher: '43 200 /n 23.24.60 100 /n 45 100R200 /n 56R700 /n 9p100 /n 2468k200 /n os100 /n es200 /n 4t100 /n 5n200',
-				twoD: {
-					numbers: ['43', '23', '24', '60', '45', '54', '56R', '9P', '2468k', 'os', 'es', '4t', '5n'],
-					prices: [200, 100, 100, 100, 100, 200, 700, 100, 200, 100, 200, 100, 200],
-				},
-				// note: '',
-				invest: 2400,
-				win: false, //only one
-				// revenue: 0,
+				type: 'du2d',
+				name: 'U Myint',
+			},
+		],
+		limit: {
+			'2d': 200000,
+			du2d: 4000000,
+		},
+		betFrom: [
+			{
+				type: '2d',
+				dateTime: '12pm',
+				handle: 'bob',
+				voucher: [
+					['12', 1000],
+					['53', 1000],
+				],
 			},
 			{
-				type: '3d',
-				date: new Date('2023-01-01'),
-				voucher: '012.011.013.200 /n 567r100 ',
-				threeD: {
-					numbers: ['012', '567r'],
-					prices: [200, 100],
-				},
-				// note: '',
-				invest: 800,
-				win: [
-					['012', 200],
-					['011', 200],
-					['013', 100],
-				], //only one
-				revenue: 115000,
+				type: 'du2d',
+				dateTime: '5pm',
+				name: 'Aung Lin',
+				voucher: [
+					['09', 500],
+					['43', 200],
+				],
+			},
+		],
+		betTo: [],
+	},
+	{
+		name: 'Dave',
+		phone: '0912345678',
+		handle: 'dave',
+		password: hash,
+		friends: ['bob'],
+		fRequest: ['frank', 'gina', 'hugo'],
+		fCancled: ['joe', 'kate'],
+		defaultType: '2d',
+		defaultAcceptor: [
+			{
+				type: '2d',
+				handle: 'bob',
+			},
+			{
+				type: 'du2d',
+				name: 'U Myint',
+			},
+		],
+		limit: {},
+		betFrom: [],
+		betTo: [
+			{
+				type: '2d',
+				dateTime: '12pm',
+				handle: 'bob',
+				voucher: [
+					['12', 20000],
+					['53', 10000],
+				],
+			},
+			{
+				type: 'du2d',
+				dateTime: '5pm',
+				name: 'Tim',
+				voucher: [['09', 100]],
 			},
 		],
 	},
 ];
 
-//win_numbers
-const win_numbers = [
+//hists
+const hits = [
 	{
-		type: 'mm2d',
-		date: new Date('2023-01-01'),
-		morning: true,
-		number: 43,
+		type: '2d',
+		dateTime: '12pm',
+		hitNumber: '32',
 	},
 	{
-		type: 'mm2d',
-		date: new Date('2023-01-01'),
-		morning: false,
-		number: 00,
-	},
-	{
-		type: '3d',
-		date: new Date('2023-01-01'),
-		number: 666,
+		type: '2d',
+		dateTime: '4pm',
+		hitNumber: '10',
 	},
 ];
 
@@ -237,10 +216,8 @@ const user_types = [
 
 module.exports = {
 	users,
-	bettors,
 	bet_types,
 	user_types,
-	win_numbers,
 };
 
 /*
