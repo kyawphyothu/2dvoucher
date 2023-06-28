@@ -7,45 +7,38 @@ import {
 	EO_Nformat,
 	EO_Tformat,
 	EOformat,
+	KNformat,
+	Kformat,
+	NKformat,
 	Nformat,
 	OEformat,
 	Pformat,
 	Tformat,
 } from "./functions";
 import {
-	isBreak,
-	isDPuu,
-	isDotBreak,
-	isDotEN,
-	isDotET,
-	isDotNaud,
-	isDotON,
-	isDotOT,
-	isDotPatt,
-	isDotR,
-	isDotSpaceR,
-	isDotTade,
+	isB,
+	isDigS,
 	isEE,
 	isEN,
 	isEO,
-	isEPuu,
+	isES,
 	isET,
-	isKhway,
-	isKhwayPuu,
-	isKoNyi,
-	isNaud,
-	isNyiKo,
+	isK,
+	isKN,
+	isKS,
+	isN,
+	isNK,
+	isNormal,
 	isOE,
 	isON,
 	isOO,
-	isOPuu,
+	isOS,
 	isOT,
-	isPatt,
-	isPuu,
+	isP,
 	isR,
-	isSpace,
-	isSpaceR,
-	isTade,
+	isS,
+	isT,
+	isTwoR,
 } from "./validation";
 
 const stringToCalculteArr = (string) => {
@@ -84,283 +77,174 @@ const stringToCalculteArr = (string) => {
 		.replaceAll("၇", "7")
 		.replaceAll("၈", "8")
 		.replaceAll("၉", "9")
-		.replace(/(\s+|\.\s|-\s|\s\.|\s-)/g, " ")
+		.replaceAll(/\./g, " ")
+		.replaceAll(/-/g, " ")
 		.toUpperCase()
 		.split("\n");
 
-	const sperateWithNumAndMoney = sperateWithNextLine.map((i) => {
-		i = i.trim();
-		if (/[ptnbkeos]/i.test(i) && !/r/i.test(i)) {
-			i = i.replaceAll(" ", "");
-		} else {
-			i = i.replaceAll(/\s+/g, " ");
-		}
+	sperateWithNextLine.map((i) => {
+		i = i.trim().replaceAll(/\s{2,}/g, " ");
 
-		if (isSpace(i)) {
-			//23 200
-			const value = i.split(" ")[0];
-			const money = i.split(" ")[1];
-			r = [...r, [value, money]];
+		if (isNormal(i)) {
+			// 45 200, 45 46 200
+			const lastSpaceIndex = i.lastIndexOf(" ");
+			const numbers = i.slice(0, lastSpaceIndex);
+			const money = i.slice(lastSpaceIndex + 1);
+
+			numbers.split(" ").map((n) => {
+				r.push([n, money]);
+			});
 		} else if (isR(i)) {
-			// 45R100
-			const money = i.split("R")[1];
-			const arr = [];
-			arr[0] = [i.split("R")[0], money];
-			arr[1] = [i.split("R")[0].split("").reverse().join(""), money];
-			r = [...r, ...arr];
-			return 1;
-		} else if (isDotR(i)) {
-			// 45.67R200
-			const money = i.split("R")[1];
-			i.split("R")[0]
-				.split(".")
-				.map((value, index) => {
-					const arr = [];
-					arr[0] = [value, money];
-					arr[1] = [value.split("").reverse().join(""), money];
-					r = [...r, ...arr];
-					return 1;
-				});
-			return 1;
-		} else if (isSpaceR(i)) {
-			// 45 200R100
-			const money = i.split(/[ R]/)[1];
-			const moneyR = i.split(/[ R]/)[2];
-			const arr = [];
-			arr[0] = [i.split(/[ R]/)[0], money];
-			arr[1] = [i.split(/[ R]/)[0].split("").reverse().join(""), moneyR];
-			r = [...r, ...arr];
-		} else if (isDotSpaceR(i)) {
-			// 45.67 100R200
-			const money = i.split(" ")[1].split("R")[0];
-			const moneyR = i.split(" ")[1].split("R")[1];
-			i.split(/[ -]/)[0]
-				.split(".")
-				.map((value, index) => {
-					const arr = [];
-					arr[0] = [value, money];
-					arr[1] = [value.split("").reverse().join(""), moneyR];
-					r = [...r, ...arr];
-					return 1;
-				});
-			return 1;
-		} else if (isPatt(i)) {
-			// 4P100
-			const money = i.split("P")[1];
-			const arr = Pformat(i.split("P")[0], money);
-			r = [...r, ...arr];
-			return 1;
-		} else if (isDotPatt(i)) {
-			// 3.4P100
-			const money = i.split("P")[1];
-			i.split("P")[0]
-				.split(".")
-				.map((value, index) => {
-					const arr = Pformat(value, money);
-					r = [...r, ...arr];
-					return 1;
-				});
-			return 1;
-		} else if (isTade(i)) {
-			//5T100
-			const value = i.split("T")[0];
-			const money = i.split("T")[1];
-			const arr = Tformat(value, money);
-			r.push(...arr);
-		} else if (isDotTade(i)) {
-			//5.6T100
-			const values = i.split("T")[0];
-			const money = i.split("T")[1];
-			values.split(".").map((value) => {
-				const arr = Tformat(value, money);
+			// 45 R 100, 45 46 R 100
+			console.log("hell");
+			const numbers = i.split("R")[0].trim();
+			const money = i.split("R")[1].trim();
+
+			numbers.split(" ").map((n) => {
+				const arr1 = [n, money];
+				const arr2 = [n.split("").reverse().join(""), money];
+				r.push(arr1, arr2);
+			});
+		} else if (isTwoR(i)) {
+			// 45 200 R 100, 45 46 200 R 100
+			const numbers = i.replaceAll(/\d{3,}|R/g, "").trim();
+			const money = i.match(/\d{3,}/g);
+
+			numbers.split(" ").map((n) => {
+				const arr1 = [n, money[0]];
+				const arr2 = [n.split("").reverse().join(""), money[1]];
+				r.push(arr1, arr2);
+			});
+		} else if (isP(i)) {
+			// 2 P 300, 2 3 P 300
+			const numbers = i.split("P")[0].trim();
+			const money = i.split("P")[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = Pformat(n, money);
 				r.push(...arr);
 			});
-		} else if (isNaud(i)) {
-			//5N100
-			const value = i.split("N")[0];
-			const money = i.split("N")[1];
-			const arr = Nformat(value, money);
-			r.push(...arr);
-		} else if (isDotNaud(i)) {
-			// 5.6N100
-			const values = i.split("N")[0];
-			const money = i.split("N")[1];
-			values.split(".").map((value) => {
-				const arr = Nformat(value, money);
+		} else if (isT(i)) {
+			//5 T 200, 5 6 T 200
+			const numbers = i.split("T")[0].trim();
+			const money = i.split("T")[1].trim();
+
+			numbers.mathc(/\d/g).map((n) => {
+				const arr = Tformat(n, money);
 				r.push(...arr);
 			});
-		} else if (isBreak(i)) {
-			//5B100
-			const value = i.split("B")[0];
-			const money = i.split("B")[1];
-			const arr = Bformat(value, money);
-			r.push(...arr);
-		} else if (isDotBreak(i)) {
-			//5.6B100
-			const values = i.split("B")[0];
-			const money = i.split("B")[1];
-			values.split(".").map((value) => {
-				const arr = Bformat(value, money);
+		} else if (isN(i)) {
+			//5 N 200, 5 6 N 200
+			const numbers = i.split("N")[0].trim();
+			const money = i.split("N")[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = Nformat(n, money);
 				r.push(...arr);
 			});
-		} else if (isNyiKo(i)) {
-			//01 12 23 34 45 56 67 78 89 90
-			const money = i.replace("NK", "");
-			const arr = () => {
-				let result = [];
-				for (let i = 0; i < 10; i++) {
-					result.push([`${i}${i === 9 ? 0 : i + 1}`, money]);
-				}
-				return result;
-			};
-			r.push(...arr());
-		} else if (isKoNyi(i)) {
-			// 09 98 87 76 65 54 43 32 21 10
-			const money = i.replace("KN", "");
-			const arr = () => {
-				let result = [];
-				for (i = 9; i >= 0; i--) {
-					result.push([`${i === 9 ? 0 : i + 1}${i}`, money]);
-				}
-				return result;
-			};
-			r.push(...arr());
+		} else if (isB(i)) {
+			//5 B 200, 5 6 B 200
+			const numbers = i.split("B")[0].trim();
+			const money = i.split("B")[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = Bformat(n, money);
+				r.push(...arr);
+			});
+		} else if (isDigS(i)) {
+			//5 S 200, 5 6 S 200
+			const numbers = i.split("S")[0].trim();
+			const money = i.split("S")[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = [n + n, money];
+				r.push(arr);
+			});
+		} else if (isET(i) || isOT(i)) {
+			//5 ET 200, 5 6 ET 200
+			const type = isET(i) ? "ET" : "OT";
+			const numbers = i.split(type)[0].trim();
+			const money = i.split(type)[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = EO_Tformat(type, n, money);
+				r.push(...arr);
+			});
+		} else if (isEN(i) || isON(i)) {
+			//5 EN 200, 5 6 EN 200
+			const type = isEN(i) ? "EN" : "ON";
+			const numbers = i.split(type)[0].trim();
+			const money = i.split(type)[1].trim();
+
+			numbers.match(/\d/g).map((n) => {
+				const arr = EO_Nformat(type, n, money);
+				r.push(...arr);
+			});
+		} else if (isS(i)) {
+			//S 100
+			const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+			const money = i.match(/\d{3,}/)[0];
+
+			numbers.map((n) => {
+				r.push([`${n}${n}`, money]);
+			});
+		} else if (isNK(i)) {
+			//NK 100
+			const money = i.match(/\d{3,}/)[0];
+
+			const arr = NKformat(money);
+			r.push(...arr);
+		} else if (isKN(i)) {
+			//KN 100
+			const money = i.match(/\d{3,}/)[0];
+
+			const arr = KNformat(money);
+			r.push(...arr);
 		} else if (isEO(i)) {
-			//01 03 05 07 09 21 23 25 27 29 etc
-			const money = i.replace("EO", "");
+			//EO 100
+			const money = i.match(/\d{3,}/)[0];
+
 			const arr = EOformat(money);
 			r.push(...arr);
 		} else if (isOE(i)) {
-			//12 14 16 18 32 34 36 38 etc
-			const money = i.replace("OE", "");
+			//OE 100
+			const money = i.match(/\d{3,}/)[0];
+
 			const arr = OEformat(money);
 			r.push(...arr);
-		} else if (isEE(i)) {
-			//00 02 04 06 08 20 22 etc
-			const money = i.replace("EE", "");
-			const arr = EEOOformat("EE", money);
-			r.push(...arr);
-		} else if (isOO(i)) {
-			//11 13 15 17 19 31 33 35 etc
-			const money = i.replace("OO", "");
-			const arr = EEOOformat("OO", money);
-			r.push(...arr);
-		} else if (isET(i)) {
-			//1E100
-			const value = i.split("ET")[0];
-			const money = i.split("ET")[1];
-			const arr = EO_Tformat("ET", value, money);
-			r.push(...arr);
-		} else if (isDotET(i)) {
-			//1.2ET100
-			const values = i.split("ET")[0];
-			const money = i.split("ET")[1];
-			values.split(".").map((value) => {
-				const arr = EO_Tformat("ET", value, money);
-				r.push(...arr);
-			});
-		} else if (isOT(i)) {
-			//2OT200
-			const value = i.split("OT")[0];
-			const money = i.split("OT")[1];
-			const arr = EO_Tformat("OT", value, money);
-		} else if (isDotOT(i)) {
-			//2.3OT200
-			const values = i.split("OT")[0];
-			const money = i.split("OT")[1];
-			values.split(".").map((value) => {
-				const arr = EO_Tformat("OT", value, money);
-				r.push(...arr);
-			});
-		} else if (isEN(i)) {
-			//3en100
-			const value = i.split("EN")[0];
-			const money = i.split("EN")[1];
-			const arr = EO_Nformat("EN", value, money);
-			r.push(...arr);
-		} else if (isDotEN(i)) {
-			//3.4en100
-			const values = i.split("EN")[0];
-			const money = i.split("EN")[1];
-			values.split(".").map((value) => {
-				const arr = EO_Nformat("EN", value, money);
-				r.push(...arr);
-			});
-		} else if (isON(i)) {
-			//3on100
-			const value = i.split("ON")[0];
-			const money = i.split("ON")[1];
-			const arr = EO_Nformat("ON", value, money);
-			r.push(...arr);
-		} else if (isDotON(i)) {
-			//2.3on200
-			const values = i.split("ON")[0];
-			const money = i.split("ON")[1];
-			values.split(".").map((value) => {
-				const arr = EO_Nformat("ON", value, money);
-				r.push(...arr);
-			});
-		} else if (isPuu(i)) {
-			//S100
-			const money = i.replace("S", "");
-			const arr = (() => {
-				let result = [];
-				for (let j = 0; j < 10; j++) {
-					result.push([`${j}${j}`, money]);
-				}
-				return result;
-			})();
-			r.push(...arr);
-		} else if (isDPuu(i)) {
-			//1234S100
-			const values = i.split("S")[0];
-			const money = i.split("S")[1];
-			values.split("").map((value) => {
-				return r.push([`${value}${value}`, money]);
-			});
-		} else if (isEPuu(i)) {
-			//00 22 44
-			const money = i.replace("ES", "");
-			const arr = (() => {
-				const result = [];
-				for (let j = 0; j < 10; j += 2) {
-					result.push([`${j}${j}`, money]);
-				}
-				return result;
-			})();
-			r.push(...arr);
-		} else if (isOPuu(i)) {
-			// 11 33 55
-			const money = i.replace("OS", "");
-			const arr = (() => {
-				const result = [];
-				for (let j = 1; j < 10; j += 2) {
-					result.push([`${j}${j}`, money]);
-				}
-				return result;
-			})();
-			r.push(...arr);
-		} else if (isKhwayPuu(i)) {
-			// some
-		} else if (isKhway(i)) {
-			// some
-		}
-		return false;
-	});
+		} else if (isEE(i) || isOO(i)) {
+			//EE 100, OO 100
+			const type = isEE(i) ? "EE" : "OO";
+			const money = i.match(/\d{3,}/)[0];
 
-	r.map((value, index) => {
-		if (value[0].indexOf(".") !== -1) {
-			const lastIndex = value[1];
-			const nums = value[0].split(".");
-			const arr = nums.map((n) => [n, lastIndex]);
-			r = [...r, ...arr];
-			return 1;
+			const arr = EEOOformat(type, money);
+			r.push(...arr);
+		} else if (isES(i) || isOS(i)) {
+			//ES 1000, OS 10000
+			const numbers = isES(i) ? [0, 2, 4, 6, 8] : [1, 3, 5, 7, 9];
+			const money = i.match(/\d{3,}/)[0];
+
+			numbers.map((n) => {
+				r.push([`${n}${n}`, money]);
+			});
+		} else if (isKS(i)) {
+			//12345 KS 10000
+			const numbers = i.split("KS")[0].trim();
+			const money = i.split("KS")[1].trim();
+
+			const arr_K = Kformat(numbers.match(/\d/g), money);
+			const arr_S = numbers.match(/\d/g).map((n) => {
+				return [`${n}${n}`, money];
+			});
+			r.push(...arr_K, ...arr_S);
+		} else if (isK(i)) {
+			//12345 K 10000
+			const numbers = i.split("K")[0].trim();
+			const money = i.split("K")[1].trim();
+
+			const arr_K = Kformat(numbers.match(/\d/g), money);
+			r.push(...arr_K);
 		}
-		return 1;
-	});
-	r = r.filter((value, index) => {
-		const regex = /[.]/;
-		return !regex.test(value[0]);
 	});
 	console.log(r);
 };

@@ -55,6 +55,20 @@ export const Bformat = (number, money) => {
 	return result;
 };
 
+export const NKformat = (money) => {
+	const result = [];
+	for (let i = 0; i < 10; i++) {
+		result.push([`${i}${i === 9 ? 0 : i + 1}`, money]);
+	}
+	return result;
+};
+export const KNformat = (money) => {
+	const result = [];
+	for (let i = 9; i >= 0; i--) {
+		result.push([`${i !== 9 ? i + 1 : 0}${i}`, money]);
+	}
+	return result;
+};
 export const EOformat = (money) => {
 	const result = [];
 	for (let i = 0; i < E.length; i++) {
@@ -116,5 +130,18 @@ export const EO_Nformat = (type, number, money) => {
 			result.push([`${number}${o}`, money]);
 		});
 	}
+	return result;
+};
+
+export const Kformat = (arr, money) => {
+	const result = [];
+	arr.map((value, index) => {
+		for (let i = 0; i < arr.length; i++) {
+			if (i !== index) {
+				// i++;
+				result.push([`${value}${arr[i]}`, money]);
+			}
+		}
+	});
 	return result;
 };
