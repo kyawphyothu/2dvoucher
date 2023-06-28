@@ -4,8 +4,8 @@ import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import { AppContext } from "./AppContextProvider";
 import Header from "./components/Header";
-import { Container, Fab, LinearProgress } from "@mui/material";
-import { Add as AddIcon, Home } from "@mui/icons-material";
+import { Box, Container, Fab, LinearProgress } from "@mui/material";
+import { Add as AddIcon, Height, Home } from "@mui/icons-material";
 import NotFound from "./Utils/NotFound";
 import Add from "./pages/Add";
 import { fetchUser } from "./apiCalls";
@@ -29,7 +29,7 @@ function App() {
 	}, []);
 
 	return (
-		<div>
+		<Box sx={{ height: "100vh"}}>
 			{isFetchingUser ? (
 				<LinearProgress />
 			) : (
@@ -43,10 +43,7 @@ function App() {
 						<Routes>
 							{auth && (
 								<>
-									<Route
-										path="/"
-										element={<Home />}
-									/>
+									<Route path="/" element={<Home />} />
 									<Route path="/add" element={<Add />} />
 								</>
 							)}
@@ -58,27 +55,24 @@ function App() {
 
 							<Route path="*" element={<NotFound />} />
 						</Routes>
-						{auth &&
-							location.pathname !== "/add" &&
-							location.pathname !== "/login" &&
-							location.pathname !== "/signup" && (
-								<Fab
-									color="info"
-									sx={{
-										position: "fixed",
-										bottom: "40px",
-										right: "40px",
-									}}
-									onClick={() => {
-										navigate("/add");
-									}}>
-									<AddIcon />
-								</Fab>
-							)}
+						{auth && !["/add", "/login", "/signup"].includes(location.pathname) && (
+							<Fab
+								color="info"
+								sx={{
+									position: "fixed",
+									bottom: "40px",
+									right: "40px",
+								}}
+								onClick={() => {
+									navigate("/add");
+								}}>
+								<AddIcon />
+							</Fab>
+						)}
 					</Container>
 				</>
 			)}
-		</div>
+		</Box>
 	);
 }
 
