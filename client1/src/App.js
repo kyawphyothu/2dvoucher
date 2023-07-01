@@ -29,7 +29,7 @@ function App() {
 	}, []);
 
 	return (
-		<Box sx={{ height: "100vh"}}>
+		<Box sx={{ height: "100vh" }}>
 			{isFetchingUser ? (
 				<LinearProgress />
 			) : (
@@ -39,7 +39,7 @@ function App() {
 					) : (
 						""
 					)}
-					<Container sx={{ marginTop: "30px" }}>
+					<Container sx={{ paddingTop: "30px" }}>
 						<Routes>
 							{auth && (
 								<>

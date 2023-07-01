@@ -61,11 +61,12 @@ const Login = () => {
 		<Container maxWidth="xs">
 			<Box
 				sx={{
-					marginTop: 10,
+					// marginTop: 10,
 					display: "flex",
 					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
+					height: "100vh"
 				}}>
 				<Typography variant="h4" sx={{ fontWeight: "bold" }}>
 					{process.env.REACT_APP_NAME}
