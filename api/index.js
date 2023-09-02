@@ -21,6 +21,10 @@ app.use(cors());
 
 connectToMongoDB();
 
+app.get("/", async (req, res) => {
+	return res.status(200).json({msg: "hello"});
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/type", typeRoutes);
