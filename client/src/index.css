@@ -1,0 +1,55 @@
+:root {
+	--card-background: #202940;
+	--card-border-radius: 0.75rem;
+	--dialog-background: #1a2035;
+}
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.floatingCard{
+	background-color: var(--card-background);
+	color: #ffffff;
+	border-radius: var(--card-border-radius);
+	box-shadow: rgba(0, 0, 0, 0.14) 0rem 0.125rem 0.125rem 0rem, rgba(0, 0, 0, 0.2) 0rem 0.1875rem 0.0625rem -0.125rem, rgba(0, 0, 0, 0.12) 0rem 0.0625rem 0.3125rem 0rem;
+	padding: 24px 24px;
+}
+
+.overFlow{
+	/* width: 100%; */
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.MuiGrid-container{
+	min-width: calc(100% + 24px);
+}
+
+.MuiAvatar-circular{
+	background-color: rgba(255, 255, 255, 0.1);
+	box-shadow: rgba(0, 0, 0, 0.12) 0rem 0.3125rem 0.625rem 0rem;
+}
+
+.MuiDialog-paper{
+	background-color: var(--dialog-background) !important;
+	border-radius: var(--card-border-radius) !important;
+}
+.MuiDialogTitle-root{
+	padding-top: 24px !important;
+}
+.MuiDialogContent-root > :not(:last-child){
+	margin-bottom: 16px;
+}
+.MuiDialogActions-root{
+	padding: 24px !important;
+}

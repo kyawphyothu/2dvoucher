@@ -1,31 +1,69 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { AppContextProvider } from "./AppContextProvider";
 import { BrowserRouter } from "react-router-dom";
-import App from "App";
+import { ThemeProvider, createTheme, responsiveFontSizes } from "@mui/material";
+import {
+	amber,
+	blue,
+	brown,
+	cyan,
+	deepOrange,
+	deepPurple,
+	green,
+	indigo,
+	lime,
+	purple,
+	red,
+	teal,
+	yellow,
+} from "@mui/material/colors";
 
-// Material Dashboard 2 React Context Provider
-import { MaterialUIControllerProvider } from "context";
+let theme = createTheme({
+	palette: {
+		mode: "dark",
+		background: {
+			default: "#1a2035",
+			paper: "#1a2035",
+		},
+		app: {
+			color: "#ffffff",
+			// background: "#1a2035",
+		},
+		appbar: {
+			background: "#001f3f",
+		},
+		logo: {
+			color: "white",
+		},
+		type: {
+			mm: teal[900],
+			"3d": deepPurple[900],
+			du: cyan[900],
+			mega: deepOrange[900],
+			ga: amber[500],
+		},
+	},
+});
+theme = responsiveFontSizes(theme);
 
-ReactDOM.render(
-	<BrowserRouter>
-		<MaterialUIControllerProvider>
-			<App />
-		</MaterialUIControllerProvider>
-	</BrowserRouter>,
-	document.getElementById("root")
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+	<React.StrictMode>
+		<ThemeProvider theme={theme}>
+			<AppContextProvider>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</AppContextProvider>
+		</ThemeProvider>
+	</React.StrictMode>
 );
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

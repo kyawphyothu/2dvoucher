@@ -1,4 +1,4 @@
-const { users, bettors, win_numbers, bet_types, user_types } = require('./dataformat')
+const { users, groups, types, messages } = require('./dataformat')
 
 
 
@@ -50,25 +50,52 @@ async function seedUsers() {
 // 	}
 // }
 
-async function seedBetTypes(){
-	await db.collection('bet_types').deleteMany({});
+async function seedTypes(){
+	await db.collection('types').deleteMany({});
 
 	try {
-		return await db.collection('bet_types').insertMany(bet_types);
+		return await db.collection('types').insertMany(types);
 	} finally {
-		console.log("bet types seding done.");
+		console.log("types seding done.");
 	}
 }
-
-async function seedUserTypes(){
-	await db.collection('user_types').deleteMany({});
+async function seedGroups(){
+	await db.collection('groups').deleteMany({});
 
 	try {
-		return await db.collection('user_types').insertMany(user_types);
+		return await db.collection('groups').insertMany(groups);
 	} finally {
-		console.log("user types seding done.");
+		console.log("types seding done.");
 	}
 }
+// async function seedMessages(){
+// 	await db.collection('groups').deleteMany({});
+
+// 	try {
+// 		return await db.collection('groups').insertMany(groups);
+// 	} finally {
+// 		console.log("types seding done.");
+// 	}
+// }
+// async function seedBetTypes(){
+// 	await db.collection('bet_types').deleteMany({});
+
+// 	// try {
+// 	// 	return await db.collection('bet_types').insertMany(bet_types);
+// 	// } finally {
+// 	// 	console.log("bet types seding done.");
+// 	// }
+// }
+
+// async function seedUserTypes(){
+// 	await db.collection('user_types').deleteMany({});
+
+// 	// try {
+// 	// 	return await db.collection('user_types').insertMany(user_types);
+// 	// } finally {
+// 	// 	console.log("user types seding done.");
+// 	// }
+// }
 
 
 // async function seedFollows() {
@@ -268,11 +295,17 @@ async function seed() {
 	// console.log("Started seeding win numbers...");
 	// await seedWinNumbers();
 
-	console.log("Started seeding bet types...");
-	await seedBetTypes();
+	console.log("Started seeding groups...");
+	await seedGroups();
+	console.log("Started seeding types...");
+	await seedTypes();
 
-	console.log("Started seeding user types...");
-	await seedUserTypes();
+
+	// console.log("Started seeding bet types...");
+	// await seedBetTypes();
+
+	// console.log("Started seeding user types...");
+	// await seedUserTypes();
 
 	// console.log("Started seeding follows for user Alice");
 	// await seedFollows();
